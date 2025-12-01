@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 pub fn char_grid_iter<T: TryFrom<char>>(
     input: &str,
 ) -> impl Iterator<Item = (usize, usize, T)> + '_ {

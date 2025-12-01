@@ -1,49 +1,39 @@
 pub fn p1(input: &str) -> String {
-    let (_dial, num_zeros) = input
-        .trim()
-        .lines()
-        .fold((50, 0), |(dial, mut num_zeros), line| {
-            let val: i32 = line[1..].trim().parse().unwrap();
-            let dial: i32 = match line.chars().next().unwrap() {
-                'L' => dial - val,
-                'R' => dial + val,
+    let (_dial, num_zeros) = input.trim().lines().map(|line| line.split_at(1)).fold(
+        (50, 0),
+        |(dial, num_zeros), (dir, val)| {
+            let val = val.parse::<i32>().unwrap();
+            let dial: i32 = match dir {
+                "L" => dial - val,
+                "R" => dial + val,
                 _ => panic!("nope"),
             }
             .rem_euclid(100);
 
-            if dial == 0 {
-                num_zeros += 1;
-            }
-
-            (dial, num_zeros)
-        });
+            (dial, num_zeros + ((dial == 0) as i32))
+        },
+    );
 
     num_zeros.to_string()
 }
 
 pub fn p2(input: &str) -> String {
-    let (_dial, num_zeros) = input
-        .trim()
-        .lines()
-        .fold((50, 0), |(dial, mut num_zeros), line| {
-            let val: i32 = line[1..].trim().parse().unwrap();
-            let (dial, zeros): (i32, i32) = match line.chars().next().unwrap() {
-                'L' => (
+    let (_dial, num_zeros) = input.trim().lines().map(|line| line.split_at(1)).fold(
+        (50, 0),
+        |(dial, num_zeros), (dir, val)| {
+            let val = val.parse::<i32>().unwrap();
+            let (dial, zeros): (i32, i32) = match dir {
+                "L" => (
                     dial - val,
-                    (val - dial).div_euclid(100) + 1 - if dial == 0 { 1 } else { 0 },
+                    (val - dial).div_euclid(100) + ((dial != 0) as i32),
                 ),
-                'R' => (dial + val, (dial + val).div_euclid(100)),
+                "R" => (dial + val, (dial + val).div_euclid(100)),
                 _ => panic!("nope"),
             };
 
-            println!("{line}: Dial {dial} npz {zeros}");
-
-            num_zeros += zeros;
-
-            let dial = dial.rem_euclid(100);
-
-            (dial, num_zeros)
-        });
+            (dial.rem_euclid(100), num_zeros + zeros)
+        },
+    );
 
     num_zeros.to_string()
 }
