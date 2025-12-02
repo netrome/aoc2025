@@ -47,5 +47,6 @@ mod solution;
 mod utils;
 
 mod day1;
+mod day2;
 
 use clap::Parser;
