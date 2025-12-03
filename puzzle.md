@@ -1,46 +1,39 @@
-\--- Day 2: Gift Shop ---
+\--- Day 3: Lobby ---
 ----------
 
-You get inside and take the elevator to its only other stop: the gift shop. "Thank you for visiting the North Pole!" gleefully exclaims a nearby sign. You aren't sure who is even allowed to visit the North Pole, but you know you can access the lobby through here, and from there you can access the rest of the North Pole base.
+You descend a short staircase, enter the surprisingly vast lobby, and are quickly cleared by the security checkpoint. When you get to the main elevators, however, you discover that each one has a red light above it: they're all *offline*.
 
-As you make your way through the surprisingly extensive selection, one of the clerks recognizes you and asks for your help.
+"Sorry about that," an Elf apologizes as she tinkers with a nearby control panel. "Some kind of electrical surge seems to have fried them. I'll try to get them online soon."
 
-As it turns out, one of the younger Elves was playing on a gift shop computer and managed to add a whole bunch of invalid product IDs to their gift shop database! Surely, it would be no trouble for you to identify the invalid product IDs for them, right?
+You explain your need to get further underground. "Well, you could at least take the escalator down to the printing department, not that you'd get much further than that without the elevators working. That is, you could if the escalator weren't also offline."
 
-They've even checked most of the product ID ranges already; they only have a few product ID ranges (your puzzle input) that you'll need to check. For example:
+"But, don't worry! It's not fried; it just needs power. Maybe you can get it running while I keep working on the elevators."
+
+There are batteries nearby that can supply emergency power to the escalator for just such an occasion. The batteries are each labeled with their [joltage](/2020/day/10) rating, a value from `1` to `9`. You make a note of their joltage ratings (your puzzle input). For example:
 
 ```
-11-22,95-115,998-1012,1188511880-1188511890,222220-222224,
-1698522-1698528,446443-446449,38593856-38593862,565653-565659,
-824824821-824824827,2121212118-2121212124
+987654321111111
+811111111111119
+234234234234278
+818181911112111
+
 ```
 
-(The ID ranges are wrapped here for legibility; in your input, they appear on a single long line.)
+The batteries are arranged into *banks*; each line of digits in your input corresponds to a single bank of batteries. Within each bank, you need to turn on *exactly two* batteries; the joltage that the bank produces is equal to the number formed by the digits on the batteries you've turned on. For example, if you have a bank like `12345` and you turn on batteries `2` and `4`, the bank would produce `24` jolts. (You cannot rearrange batteries.)
 
-The ranges are separated by commas (`,`); each range gives its *first ID* and *last ID* separated by a dash (`-`).
+You'll need to find the largest possible joltage each bank can produce. In the above example:
 
-Since the young Elf was just doing silly patterns, you can find the *invalid IDs* by looking for any ID which is made only of some sequence of digits repeated twice. So, `55` (`5` twice), `6464` (`64` twice), and `123123` (`123` twice) would all be invalid IDs.
+* In `*98*7654321111111`, you can make the largest joltage possible, *`98`*, by turning on the first two batteries.
+* In `*8*1111111111111*9*`, you can make the largest joltage possible by turning on the batteries labeled `8` and `9`, producing *`89`* jolts.
+* In `2342342342342*78*`, you can make *`78`* by turning on the last two batteries (marked `7` and `8`).
+* In `818181*9*1111*2*111`, the largest joltage you can produce is *`92`*.
 
-None of the numbers have leading zeroes; `0101` isn't an ID at all. (`101` is a *valid* ID that you would ignore.)
+The total output joltage is the sum of the maximum joltage from each bank, so in this example, the total output joltage is `98` + `89` + `78` + `92` = `*357*`.
 
-Your job is to find all of the invalid IDs that appear in the given ranges. In the above example:
+There are many batteries in front of you. Find the maximum joltage possible from each bank; *what is the total output joltage?*
 
-* `11-22` has two invalid IDs, `*11*` and `*22*`.
-* `95-115` has one invalid ID, `*99*`.
-* `998-1012` has one invalid ID, `*1010*`.
-* `1188511880-1188511890` has one invalid ID, `*1188511885*`.
-* `222220-222224` has one invalid ID, `*222222*`.
-* `1698522-1698528` contains no invalid IDs.
-* `446443-446449` has one invalid ID, `*446446*`.
-* `38593856-38593862` has one invalid ID, `*38593859*`.
-* The rest of the ranges contain no invalid IDs.
-
-Adding up all the invalid IDs in this example produces `*1227775554*`.
-
-*What do you get if you add up all of the invalid IDs?*
-
-To begin, [get your puzzle input](2/input).
+To begin, [get your puzzle input](3/input).
 
 Answer:
 
-You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Gift+Shop%22+%2D+Day+2+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F2) [Twitter](https://twitter.com/intent/tweet?text=%22Gift+Shop%22+%2D+Day+2+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F2&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
+You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Lobby%22+%2D+Day+3+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F3) [Twitter](https://twitter.com/intent/tweet?text=%22Lobby%22+%2D+Day+3+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F3&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
