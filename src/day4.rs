@@ -14,7 +14,21 @@ pub fn p1(input: &str) -> String {
 }
 
 pub fn p2(input: &str) -> String {
-    todo!()
+    let mut grid = Grid(
+        utils::char_grid_iter(input)
+            .map(|(x, y, char)| (Pos::new(x as i64, y as i64), char))
+            .collect(),
+    );
+
+    let mut total_removed = 0;
+    let mut just_removed = grid.remove_reachable_paper();
+
+    while just_removed > 0 {
+        total_removed += just_removed;
+        just_removed = grid.remove_reachable_paper();
+    }
+
+    total_removed.to_string()
 }
 
 type Pos = num::Complex<i64>;
@@ -29,6 +43,23 @@ impl Grid {
             .filter(|n| self.0.get(n).copied().unwrap_or('.') == '@')
             .count()
             < 4
+    }
+
+    fn remove_reachable_paper(&mut self) -> usize {
+        let removable_positions: Vec<_> = self
+            .0
+            .keys()
+            .filter(|pos| {
+                self.0.get(pos).copied().unwrap_or('.') == '@' && self.forklift_can_access(pos)
+            })
+            .cloned()
+            .collect();
+
+        for pos in &removable_positions {
+            self.0.insert(*pos, '.');
+        }
+
+        removable_positions.len()
     }
 }
 
