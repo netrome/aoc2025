@@ -1,39 +1,54 @@
-\--- Day 3: Lobby ---
+\--- Day 4: Printing Department ---
 ----------
 
-You descend a short staircase, enter the surprisingly vast lobby, and are quickly cleared by the security checkpoint. When you get to the main elevators, however, you discover that each one has a red light above it: they're all *offline*.
+You ride the escalator down to the printing department. They're clearly getting ready for Christmas; they have lots of large rolls of paper everywhere, and there's even a massive printer in the corner (to handle the really big print jobs).
 
-"Sorry about that," an Elf apologizes as she tinkers with a nearby control panel. "Some kind of electrical surge seems to have fried them. I'll try to get them online soon."
+Decorating here will be easy: they can make their own decorations. What you really need is a way to get further into the North Pole base while the elevators are offline.
 
-You explain your need to get further underground. "Well, you could at least take the escalator down to the printing department, not that you'd get much further than that without the elevators working. That is, you could if the escalator weren't also offline."
+"Actually, maybe we can help with that," one of the Elves replies when you ask for help. "We're pretty sure there's a cafeteria on the other side of the back wall. If we could break through the wall, you'd be able to keep moving. It's too bad all of our forklifts are so busy moving those big rolls of paper around."
 
-"But, don't worry! It's not fried; it just needs power. Maybe you can get it running while I keep working on the elevators."
+If you can optimize the work the forklifts are doing, maybe they would have time to spare to break through the wall.
 
-There are batteries nearby that can supply emergency power to the escalator for just such an occasion. The batteries are each labeled with their [joltage](/2020/day/10) rating, a value from `1` to `9`. You make a note of their joltage ratings (your puzzle input). For example:
+The rolls of paper (`@`) are arranged on a large grid; the Elves even have a helpful diagram (your puzzle input) indicating where everything is located.
 
-```
-987654321111111
-811111111111119
-234234234234278
-818181911112111
+For example:
 
 ```
+..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+@@.@@@@.@@
+.@@@@@@@.@
+.@.@.@.@@@
+@.@@@.@@@@
+.@@@@@@@@.
+@.@.@@@.@.
 
-The batteries are arranged into *banks*; each line of digits in your input corresponds to a single bank of batteries. Within each bank, you need to turn on *exactly two* batteries; the joltage that the bank produces is equal to the number formed by the digits on the batteries you've turned on. For example, if you have a bank like `12345` and you turn on batteries `2` and `4`, the bank would produce `24` jolts. (You cannot rearrange batteries.)
+```
 
-You'll need to find the largest possible joltage each bank can produce. In the above example:
+The forklifts can only access a roll of paper if there are *fewer than four rolls of paper* in the eight adjacent positions. If you can figure out which rolls of paper the forklifts can access, they'll spend less time looking and more time breaking down the wall to the cafeteria.
 
-* In `*98*7654321111111`, you can make the largest joltage possible, *`98`*, by turning on the first two batteries.
-* In `*8*1111111111111*9*`, you can make the largest joltage possible by turning on the batteries labeled `8` and `9`, producing *`89`* jolts.
-* In `2342342342342*78*`, you can make *`78`* by turning on the last two batteries (marked `7` and `8`).
-* In `818181*9*1111*2*111`, the largest joltage you can produce is *`92`*.
+In this example, there are `*13*` rolls of paper that can be accessed by a forklift (marked with `x`):
 
-The total output joltage is the sum of the maximum joltage from each bank, so in this example, the total output joltage is `98` + `89` + `78` + `92` = `*357*`.
+```
+..xx.xx@x.
+x@@.@.@.@@
+@@@@@.x.@@
+@.@@@@..@.
+x@.@@@@.@x
+.@@@@@@@.@
+.@.@.@.@@@
+x.@@@.@@@@
+.@@@@@@@@.
+x.x.@@@.x.
 
-There are many batteries in front of you. Find the maximum joltage possible from each bank; *what is the total output joltage?*
+```
 
-To begin, [get your puzzle input](3/input).
+Consider your complete diagram of the paper roll locations. *How many rolls of paper can be accessed by a forklift?*
+
+To begin, [get your puzzle input](4/input).
 
 Answer:
 
-You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Lobby%22+%2D+Day+3+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F3) [Twitter](https://twitter.com/intent/tweet?text=%22Lobby%22+%2D+Day+3+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F3&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
+You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Printing+Department%22+%2D+Day+4+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F4) [Twitter](https://twitter.com/intent/tweet?text=%22Printing+Department%22+%2D+Day+4+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F4&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
