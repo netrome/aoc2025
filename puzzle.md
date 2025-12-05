@@ -1,54 +1,48 @@
-\--- Day 4: Printing Department ---
+\--- Day 5: Cafeteria ---
 ----------
 
-You ride the escalator down to the printing department. They're clearly getting ready for Christmas; they have lots of large rolls of paper everywhere, and there's even a massive printer in the corner (to handle the really big print jobs).
+As the forklifts break through the wall, the Elves are delighted to discover that there was a cafeteria on the other side after all.
 
-Decorating here will be easy: they can make their own decorations. What you really need is a way to get further into the North Pole base while the elevators are offline.
+You can hear a commotion coming from the kitchen. "At this rate, we won't have any time left to put the wreaths up in the dining hall!" Resolute in your quest, you investigate.
 
-"Actually, maybe we can help with that," one of the Elves replies when you ask for help. "We're pretty sure there's a cafeteria on the other side of the back wall. If we could break through the wall, you'd be able to keep moving. It's too bad all of our forklifts are so busy moving those big rolls of paper around."
+"If only we hadn't switched to the new inventory management system right before Christmas!" another Elf exclaims. You ask what's going on.
 
-If you can optimize the work the forklifts are doing, maybe they would have time to spare to break through the wall.
+The Elves in the kitchen explain the situation: because of their complicated new inventory management system, they can't figure out which of their ingredients are *fresh* and which are *spoiled*. When you ask how it works, they give you a copy of their database (your puzzle input).
 
-The rolls of paper (`@`) are arranged on a large grid; the Elves even have a helpful diagram (your puzzle input) indicating where everything is located.
-
-For example:
+The database operates on *ingredient IDs*. It consists of a list of *fresh ingredient ID ranges*, a blank line, and a list of *available ingredient IDs*. For example:
 
 ```
-..@@.@@@@.
-@@@.@.@.@@
-@@@@@.@.@@
-@.@@@@..@.
-@@.@@@@.@@
-.@@@@@@@.@
-.@.@.@.@@@
-@.@@@.@@@@
-.@@@@@@@@.
-@.@.@@@.@.
+3-5
+10-14
+16-20
+12-18
 
-```
-
-The forklifts can only access a roll of paper if there are *fewer than four rolls of paper* in the eight adjacent positions. If you can figure out which rolls of paper the forklifts can access, they'll spend less time looking and more time breaking down the wall to the cafeteria.
-
-In this example, there are `*13*` rolls of paper that can be accessed by a forklift (marked with `x`):
-
-```
-..xx.xx@x.
-x@@.@.@.@@
-@@@@@.x.@@
-@.@@@@..@.
-x@.@@@@.@x
-.@@@@@@@.@
-.@.@.@.@@@
-x.@@@.@@@@
-.@@@@@@@@.
-x.x.@@@.x.
+1
+5
+8
+11
+17
+32
 
 ```
 
-Consider your complete diagram of the paper roll locations. *How many rolls of paper can be accessed by a forklift?*
+The fresh ID ranges are *inclusive*: the range `3-5` means that ingredient IDs `3`, `4`, and `5` are all *fresh*. The ranges can also *overlap*; an ingredient ID is fresh if it is in *any* range.
 
-To begin, [get your puzzle input](4/input).
+The Elves are trying to determine which of the *available ingredient IDs* are *fresh*. In this example, this is done as follows:
+
+* Ingredient ID `1` is spoiled because it does not fall into any range.
+* Ingredient ID `5` is *fresh* because it falls into range `3-5`.
+* Ingredient ID `8` is spoiled.
+* Ingredient ID `11` is *fresh* because it falls into range `10-14`.
+* Ingredient ID `17` is *fresh* because it falls into range `16-20` as well as range `12-18`.
+* Ingredient ID `32` is spoiled.
+
+So, in this example, *`3`* of the available ingredient IDs are fresh.
+
+Process the database file from the new inventory management system. *How many of the available ingredient IDs are fresh?*
+
+To begin, [get your puzzle input](5/input).
 
 Answer:
 
-You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Printing+Department%22+%2D+Day+4+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F4) [Twitter](https://twitter.com/intent/tweet?text=%22Printing+Department%22+%2D+Day+4+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F4&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
+You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Cafeteria%22+%2D+Day+5+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F5) [Twitter](https://twitter.com/intent/tweet?text=%22Cafeteria%22+%2D+Day+5+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F5&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
