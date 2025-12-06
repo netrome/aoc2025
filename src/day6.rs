@@ -23,7 +23,50 @@ pub fn p1(input: &str) -> String {
 }
 
 pub fn p2(input: &str) -> String {
-    todo!()
+    let lines: Vec<_> = input.lines().collect();
+
+    let mut ops: Vec<Op> = lines
+        .last()
+        .unwrap()
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect();
+    ops.reverse();
+
+    let chars: Vec<Vec<char>> = lines[0..lines.len() - 1]
+        .iter()
+        .map(|line| line.chars().collect::<Vec<_>>()[0..line.len()].to_vec())
+        .collect();
+
+    let mut numbers = Vec::new();
+    let mut number_row: Vec<i64> = Vec::new();
+    for col in (0..chars[0].len()).rev() {
+        let mut line: Vec<char> = Vec::new();
+
+        for row in 0..chars.len() {
+            line.push(chars[row][col]);
+        }
+
+        let line: String = line.iter().filter(|c| !c.is_whitespace()).collect();
+        let Ok(number) = line.parse() else {
+            numbers.push(number_row);
+            number_row = Vec::new();
+            continue;
+        };
+
+        number_row.push(number);
+    }
+    numbers.push(number_row);
+
+    let problems = MathProblems(
+        numbers
+            .into_iter()
+            .zip(ops)
+            .map(|(numbers, op)| MathProblem { op, numbers })
+            .collect(),
+    );
+
+    problems.solve_all_sum().to_string()
 }
 
 struct MathProblems(Vec<MathProblem>);
@@ -33,7 +76,7 @@ struct MathProblem {
     numbers: Vec<i64>,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 enum Op {
     Mul,
     Add,
