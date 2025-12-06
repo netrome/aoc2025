@@ -1,48 +1,41 @@
-\--- Day 5: Cafeteria ---
+\--- Day 6: Trash Compactor ---
 ----------
 
-As the forklifts break through the wall, the Elves are delighted to discover that there was a cafeteria on the other side after all.
+After helping the Elves in the kitchen, you were taking a break and helping them re-enact a movie scene when you over-enthusiastically jumped into the garbage chute!
 
-You can hear a commotion coming from the kitchen. "At this rate, we won't have any time left to put the wreaths up in the dining hall!" Resolute in your quest, you investigate.
+A brief fall later, you find yourself in a garbage smasher. Unfortunately, the door's been magnetically sealed.
 
-"If only we hadn't switched to the new inventory management system right before Christmas!" another Elf exclaims. You ask what's going on.
+As you try to find a way out, you are approached by a family of cephalopods! They're pretty sure they can get the door open, but it will take some time. While you wait, they're curious if you can help the youngest cephalopod with her [math homework](/2021/day/18).
 
-The Elves in the kitchen explain the situation: because of their complicated new inventory management system, they can't figure out which of their ingredients are *fresh* and which are *spoiled*. When you ask how it works, they give you a copy of their database (your puzzle input).
+Cephalopod math doesn't look that different from normal math. The math worksheet (your puzzle input) consists of a list of *problems*; each problem has a group of numbers that need to be either *added* (`+`) or *multiplied* (`*`) together.
 
-The database operates on *ingredient IDs*. It consists of a list of *fresh ingredient ID ranges*, a blank line, and a list of *available ingredient IDs*. For example:
+However, the problems are arranged a little strangely; they seem to be presented next to each other in a very long horizontal list. For example:
 
 ```
-3-5
-10-14
-16-20
-12-18
-
-1
-5
-8
-11
-17
-32
+123 328  51 64
+ 45 64  387 23
+  6 98  215 314
+*   +   *   +  
 
 ```
 
-The fresh ID ranges are *inclusive*: the range `3-5` means that ingredient IDs `3`, `4`, and `5` are all *fresh*. The ranges can also *overlap*; an ingredient ID is fresh if it is in *any* range.
+Each problem's numbers are arranged vertically; at the bottom of the problem is the symbol for the operation that needs to be performed. Problems are separated by a full column of only spaces. The left/right alignment of numbers within each problem can be ignored.
 
-The Elves are trying to determine which of the *available ingredient IDs* are *fresh*. In this example, this is done as follows:
+So, this worksheet contains four problems:
 
-* Ingredient ID `1` is spoiled because it does not fall into any range.
-* Ingredient ID `5` is *fresh* because it falls into range `3-5`.
-* Ingredient ID `8` is spoiled.
-* Ingredient ID `11` is *fresh* because it falls into range `10-14`.
-* Ingredient ID `17` is *fresh* because it falls into range `16-20` as well as range `12-18`.
-* Ingredient ID `32` is spoiled.
+* `123` \* `45` \* `6` = `*33210*`
+* `328` + `64` + `98` = `*490*`
+* `51` \* `387` \* `215` = `*4243455*`
+* `64` + `23` + `314` = `*401*`
 
-So, in this example, *`3`* of the available ingredient IDs are fresh.
+To check their work, cephalopod students are given the *grand total* of adding together all of the answers to the individual problems. In this worksheet, the grand total is `33210` + `490` + `4243455` + `401` = `*4277556*`.
 
-Process the database file from the new inventory management system. *How many of the available ingredient IDs are fresh?*
+Of course, the actual worksheet is *much* wider. You'll need to make sure to unroll it completely so that you can read the problems clearly.
 
-To begin, [get your puzzle input](5/input).
+Solve the problems on the math worksheet. *What is the grand total found by adding together all of the answers to the individual problems?*
+
+To begin, [get your puzzle input](6/input).
 
 Answer:
 
-You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Cafeteria%22+%2D+Day+5+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F5) [Twitter](https://twitter.com/intent/tweet?text=%22Cafeteria%22+%2D+Day+5+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F5&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
+You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Trash+Compactor%22+%2D+Day+6+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F6) [Twitter](https://twitter.com/intent/tweet?text=%22Trash+Compactor%22+%2D+Day+6+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F6&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
