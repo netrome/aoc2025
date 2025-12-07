@@ -56,24 +56,22 @@ pub fn p2(input: &str) -> String {
         })
         .collect();
 
-    let mut timelines: HashMap<usize, usize> = HashMap::from_iter([(start, 1)]);
-    let mut num_splits = 0;
+    let mut all_timelines: HashMap<usize, usize> = HashMap::from_iter([(start, 1)]);
 
     for splitters in all_splitters {
-        let timelines: Vec<(usize, usize)> = timelines
+        let timelines: Vec<(usize, usize)> = all_timelines
             .iter()
             .filter(|(key, v)| splitters.contains(key))
             .map(|(k, v)| (*k, *v))
             .collect();
         for timeline in timelines {
-            timelines.remove(timeline.0);
-            pipes.insert(split - 1);
-            pipes.insert(split + 1);
-            num_splits += 1;
+            all_timelines.remove(&timeline.0);
+            *all_timelines.entry(timeline.0 - 1).or_insert(0) += timeline.1;
+            *all_timelines.entry(timeline.0 + 1).or_insert(0) += timeline.1;
         }
     }
 
-    num_splits.to_string()
+    all_timelines.values().sum::<usize>().to_string()
 }
 
 use std::collections::{HashMap, HashSet};
