@@ -36,7 +36,27 @@ pub fn p1(input: &str) -> String {
 }
 
 pub fn p2(input: &str) -> String {
-    todo!()
+    let positions: Vec<Pos> = input
+        .trim()
+        .lines()
+        .map(|line| line.parse().unwrap())
+        .collect();
+
+    let mut junction_boxes = JunctionBoxes::new(positions.clone());
+
+    while junction_boxes.circuits.len() > 2 {
+        junction_boxes.join_closest_circuits();
+    }
+
+    let final_pair = junction_boxes.circuits[0]
+        .0
+        .iter()
+        .cartesian_product(junction_boxes.circuits[1].0.iter())
+        .map(|(left, right)| (left.square_distance(right), left, right))
+        .min_by_key(|(dist, _, _)| *dist)
+        .unwrap();
+
+    (final_pair.1.0 * final_pair.2.0).to_string()
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -118,8 +138,6 @@ impl JunctionBoxes {
             .filter(|(dist, _, _)| *dist > 0)
             .min()
             .unwrap();
-
-        println!("Closest circuits {} {}", min.1, min.2);
 
         (min.1, min.2)
     }
