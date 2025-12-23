@@ -1,105 +1,67 @@
-\--- Day 9: Movie Theater ---
+\--- Day 10: Factory ---
 ----------
 
-You slide down the [firepole](https://en.wikipedia.org/wiki/Fireman%27s_pole) in the corner of the playground and land in the North Pole base movie theater!
+Just across the hall, you find a large factory. Fortunately, the Elves here have plenty of time to decorate. Unfortunately, it's because the factory machines are all offline, and none of the Elves can figure out the initialization procedure.
 
-The movie theater has a big tile floor with an interesting pattern. Elves here are redecorating the theater by switching out some of the square tiles in the big grid they form. Some of the tiles are *red*; the Elves would like to find the largest rectangle that uses red tiles for two of its opposite corners. They even have a list of where the red tiles are located in the grid (your puzzle input).
+The Elves do have the manual for the machines, but the section detailing the initialization procedure was eaten by a [Shiba Inu](https://en.wikipedia.org/wiki/Shiba_Inu). All that remains of the manual are some indicator light diagrams, button wiring schematics, and [joltage](3) requirements for each machine.
 
 For example:
 
 ```
-7,1
-11,1
-11,7
-9,7
-9,5
-2,5
-2,3
-7,3
+[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
+[...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}
+[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}
 
 ```
 
-Showing red tiles as `#` and other tiles as `.`, the above arrangement of red tiles would look like this:
+The manual describes one machine per line. Each line contains a single indicator light diagram in `[`square brackets`]`, one or more button wiring schematics in `(`parentheses`)`, and joltage requirements in `{`curly braces`}`.
+
+To start a machine, its *indicator lights* must match those shown in the diagram, where `.` means *off* and `#` means *on*. The machine has the number of indicator lights shown, but its indicator lights are all *initially off*.
+
+So, an indicator light diagram like `[.##.]` means that the machine has four indicator lights which are initially off and that the goal is to simultaneously configure the first light to be off, the second light to be on, the third to be on, and the fourth to be off.
+
+You can *toggle* the state of indicator lights by pushing any of the listed *buttons*. Each button lists which indicator lights it toggles, where `0` means the first light, `1` means the second light, and so on. When you push a button, each listed indicator light either turns on (if it was off) or turns off (if it was on). You have to push each button an integer number of times; there's no such thing as "0.5 presses" (nor can you push a button a negative number of times).
+
+So, a button wiring schematic like `(0,3,4)` means that each time you push that button, the first, fourth, and fifth indicator lights would all toggle between on and off. If the indicator lights were `[#.....]`, pushing the button would change them to be `[...##.]` instead.
+
+Because none of the machines are running, the joltage requirements are irrelevant and can be safely ignored.
+
+You can push each button as many times as you like. However, to save on time, you will need to determine the *fewest total presses* required to correctly configure all indicator lights for all machines in your list.
+
+There are a few ways to correctly configure the first machine:
 
 ```
-..............
-.......#...#..
-..............
-..#....#......
-..............
-..#......#....
-..............
-.........#.#..
-..............
-
+[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
 ```
 
-You can choose any two red tiles as the opposite corners of your rectangle; your goal is to find the largest rectangle possible.
+* You could press the first three buttons once each, a total of `3` button presses.
+* You could press `(1,3)` once, `(2,3)` once, and `(0,1)` twice, a total of `4` button presses.
+* You could press all of the buttons except `(1,3)` once each, a total of `5` button presses.
 
-For example, you could make a rectangle (shown as `O`) with an area of `24` between `2,5` and `9,7`:
+However, the fewest button presses required is `*2*`. One way to do this is by pressing the last two buttons (`(0,2)` and `(0,1)`) once each.
 
-```
-..............
-.......#...#..
-..............
-..#....#......
-..............
-..OOOOOOOO....
-..OOOOOOOO....
-..OOOOOOOO.#..
-..............
+The second machine can be configured with as few as `*3*` button presses:
 
 ```
-
-Or, you could make a rectangle with area `35` between `7,1` and `11,7`:
-
-```
-..............
-.......OOOOO..
-.......OOOOO..
-..#....OOOOO..
-.......OOOOO..
-..#....OOOOO..
-.......OOOOO..
-.......OOOOO..
-..............
-
+[...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}
 ```
 
-You could even make a thin rectangle with an area of only `6` between `7,3` and `2,3`:
+One way to achieve this is by pressing the last three buttons (`(0,4)`, `(0,1,2)`, and `(1,2,3,4)`) once each.
+
+The third machine has a total of six indicator lights that need to be configured correctly:
 
 ```
-..............
-.......#...#..
-..............
-..OOOOOO......
-..............
-..#......#....
-..............
-.........#.#..
-..............
-
+[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}
 ```
 
-Ultimately, the largest rectangle you can make in this example has area `*50*`. One way to do this is between `2,5` and `11,1`:
+The fewest presses required to correctly configure it is `*2*`; one way to do this is by pressing buttons `(0,3,4)` and `(0,1,2,4,5)` once each.
 
-```
-..............
-..OOOOOOOOOO..
-..OOOOOOOOOO..
-..OOOOOOOOOO..
-..OOOOOOOOOO..
-..OOOOOOOOOO..
-..............
-.........#.#..
-..............
+So, the fewest button presses required to correctly configure the indicator lights on all of the machines is `2` + `3` + `2` = `*7*`.
 
-```
+Analyze each machine's indicator light diagram and button wiring schematics. *What is the fewest button presses required to correctly configure the indicator lights on all of the machines?*
 
-Using two red tiles as opposite corners, *what is the largest area of any rectangle you can make?*
-
-To begin, [get your puzzle input](9/input).
+To begin, [get your puzzle input](10/input).
 
 Answer:
 
-You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Movie+Theater%22+%2D+Day+9+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F9) [Twitter](https://twitter.com/intent/tweet?text=%22Movie+Theater%22+%2D+Day+9+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F9&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
+You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Factory%22+%2D+Day+10+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F10) [Twitter](https://twitter.com/intent/tweet?text=%22Factory%22+%2D+Day+10+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F10&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
