@@ -67,18 +67,18 @@ impl Machine {
     fn fewest_presses_to_match_joltage_req(&self) -> usize {
         let mut distances: HashMap<[u8; 12], usize> = HashMap::new();
 
-        let mut heap = BinaryHeap::new();
-        heap.push((0, [0; 12], 0));
+        let mut stack = Vec::new();
+        stack.push(([0; 12], 0));
 
-        while let Some((height, state, distance)) = heap.pop() {
+        while let Some((state, distance)) = stack.pop() {
             if state == self.joltage_req {
                 return distance;
             }
             distances.insert(state, distance);
 
-            for (neighbor, height) in self.neighbors_joltage(state, height) {
+            for neighbor in self.neighbors_joltage(state) {
                 if !distances.contains_key(&neighbor) && !self.is_too_high(neighbor) {
-                    heap.push((height, neighbor, distance + 1));
+                    stack.push((neighbor, distance + 1));
                 }
             }
         }
@@ -86,7 +86,7 @@ impl Machine {
         panic!("Nooooooooope")
     }
 
-    fn neighbors_joltage(&self, state: [u8; 12], height: u16) -> Vec<([u8; 12], u16)> {
+    fn neighbors_joltage(&self, state: [u8; 12]) -> Vec<[u8; 12]> {
         self.buttons_alt
             .iter()
             .map(|buttons| {
@@ -94,7 +94,7 @@ impl Machine {
                 for idx in buttons {
                     state[*idx] += 1
                 }
-                (state, height + buttons.len() as u16)
+                state
             })
             .collect()
     }
