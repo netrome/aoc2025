@@ -68,28 +68,17 @@ impl Machine {
         let mut distances: HashMap<[u8; 12], usize> = HashMap::new();
 
         let mut heap = BinaryHeap::new();
-        heap.push((Reverse(0), [0; 12], 0));
+        heap.push((0, [0; 12], 0));
 
-        while let Some((_, state, distance)) = heap.pop() {
+        while let Some((height, state, distance)) = heap.pop() {
             if state == self.joltage_req {
                 return distance;
             }
             distances.insert(state, distance);
 
-            for neighbor in self.neighbors_joltage(state) {
+            for (neighbor, height) in self.neighbors_joltage(state, height) {
                 if !distances.contains_key(&neighbor) && !self.is_too_high(neighbor) {
-                    heap.push((
-                        Reverse(
-                            neighbor
-                                .iter()
-                                .zip(self.joltage_req.iter())
-                                .map(|(val, req)| req - val)
-                                .max()
-                                .unwrap(),
-                        ),
-                        neighbor,
-                        distance + 1,
-                    ));
+                    heap.push((height, neighbor, distance + 1));
                 }
             }
         }
@@ -97,7 +86,7 @@ impl Machine {
         panic!("Nooooooooope")
     }
 
-    fn neighbors_joltage(&self, state: [u8; 12]) -> Vec<[u8; 12]> {
+    fn neighbors_joltage(&self, state: [u8; 12], height: u16) -> Vec<([u8; 12], u16)> {
         self.buttons_alt
             .iter()
             .map(|buttons| {
@@ -105,7 +94,7 @@ impl Machine {
                 for idx in buttons {
                     state[*idx] += 1
                 }
-                state
+                (state, height + buttons.len() as u16)
             })
             .collect()
     }
