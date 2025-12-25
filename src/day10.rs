@@ -30,7 +30,6 @@ fn find_fewest_presses(line: &str) -> usize {
 }
 
 fn find_fewest_presses_for_joltage(line: &str) -> usize {
-    println!("Processing line: {line}");
     let machine: Machine = line.parse().unwrap();
     machine.fewest_presses_bifurcate()
 }
@@ -88,17 +87,14 @@ impl Machine {
 
     fn solve_recursive(&self, target: &[usize], memo: &mut HashMap<Vec<usize>, usize>) -> usize {
         let target_vec = target.to_vec();
-        println!("Solving for target: {:?}", target_vec);
 
         // Base case: all joltages are 0
         if target.iter().all(|&x| x == 0) {
-            println!("Base case reached: {:?}", target_vec);
             return 0;
         }
 
         // Check memo
         if let Some(&result) = memo.get(&target_vec) {
-            println!("Found in memo: {:?} -> {}", target_vec, result);
             return result;
         }
 
@@ -148,30 +144,19 @@ impl Machine {
                 continue;
             }
 
-            println!(
-                "  Valid combination: mask={:b}, buttons={}, parity={:?}, remaining={:?}",
-                button_mask, button_count, parity_state, remaining_joltages
-            );
-
             // Divide by 2 and recurse
             let halved: Vec<usize> = remaining_joltages.iter().map(|&x| x / 2).collect();
             let recursive_cost = self.solve_recursive(&halved, memo);
 
             if recursive_cost != usize::MAX {
                 let total_cost = button_count + 2 * recursive_cost;
-                println!(
-                    "    -> recursive_cost={}, total_cost={}",
-                    recursive_cost, total_cost
-                );
                 min_presses = min_presses.min(total_cost);
             }
         }
 
         let result = if min_presses == usize::MAX {
-            println!("No solution found for {:?}", target_vec);
             usize::MAX
         } else {
-            println!("Best solution for {:?}: {}", target_vec, min_presses);
             min_presses
         };
         memo.insert(target_vec, result);
