@@ -21,7 +21,7 @@ struct Machine {
     diagram: BitVec,
     buttons: Vec<BitVec>,
     buttons_alt: Vec<Vec<usize>>,
-    joltage_req: [u8; 12],
+    joltage_req: [u16; 12],
 }
 
 fn find_fewest_presses(line: &str) -> usize {
@@ -65,12 +65,12 @@ impl Machine {
     }
 
     fn fewest_presses_to_match_joltage_req(&self) -> usize {
-        let mut distances: HashMap<[u8; 12], usize> = HashMap::new();
+        let mut distances: HashMap<[u16; 12], usize> = HashMap::new();
 
-        let mut queue = VecDeque::new();
-        queue.push_back(([0; 12], 0));
+        let mut heap = BinaryHeap::new();
+        heap.push((0, [0; 12], 0));
 
-        while let Some((state, distance)) = queue.pop_front() {
+        while let Some((_, state, distance)) = heap.pop() {
             if state == self.joltage_req {
                 return distance;
             }
@@ -78,7 +78,7 @@ impl Machine {
 
             for neighbor in self.neighbors_joltage(state) {
                 if !distances.contains_key(&neighbor) && !self.is_too_high(neighbor) {
-                    queue.push_back((neighbor, distance + 1));
+                    heap.push((neighbor.iter().sum::<u16>(), neighbor, distance + 1));
                 }
             }
         }
@@ -86,7 +86,7 @@ impl Machine {
         panic!("Nooooooooope")
     }
 
-    fn neighbors_joltage(&self, state: [u8; 12]) -> Vec<[u8; 12]> {
+    fn neighbors_joltage(&self, state: [u16; 12]) -> Vec<[u16; 12]> {
         self.buttons_alt
             .iter()
             .map(|buttons| {
@@ -99,7 +99,7 @@ impl Machine {
             .collect()
     }
 
-    fn is_too_high(&self, state: [u8; 12]) -> bool {
+    fn is_too_high(&self, state: [u16; 12]) -> bool {
         state
             .iter()
             .zip(self.joltage_req.iter())
@@ -172,7 +172,7 @@ impl FromStr for Machine {
 type BitVec = tinybitset::TinyBitSet<u8, 2>;
 
 use std::{
-    collections::{HashMap, VecDeque},
+    collections::{BinaryHeap, HashMap, VecDeque},
     ops::BitXor,
     str::FromStr,
 };
