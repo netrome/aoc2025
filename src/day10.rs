@@ -21,7 +21,7 @@ struct Machine {
     diagram: BitVec,
     buttons: Vec<BitVec>,
     buttons_alt: Vec<Vec<usize>>,
-    joltage_req: [u16; 12],
+    joltage_req: [u8; 12],
 }
 
 fn find_fewest_presses(line: &str) -> usize {
@@ -65,10 +65,10 @@ impl Machine {
     }
 
     fn fewest_presses_to_match_joltage_req(&self) -> usize {
-        let mut distances: HashMap<[u16; 12], usize> = HashMap::new();
+        let mut distances: HashMap<[u8; 12], usize> = HashMap::new();
 
         let mut heap = BinaryHeap::new();
-        heap.push((0, [0; 12], 0));
+        heap.push((Reverse(0), [0; 12], 0));
 
         while let Some((_, state, distance)) = heap.pop() {
             if state == self.joltage_req {
@@ -78,7 +78,18 @@ impl Machine {
 
             for neighbor in self.neighbors_joltage(state) {
                 if !distances.contains_key(&neighbor) && !self.is_too_high(neighbor) {
-                    heap.push((neighbor.iter().sum::<u16>(), neighbor, distance + 1));
+                    heap.push((
+                        Reverse(
+                            neighbor
+                                .iter()
+                                .zip(self.joltage_req.iter())
+                                .map(|(val, req)| req - val)
+                                .max()
+                                .unwrap(),
+                        ),
+                        neighbor,
+                        distance + 1,
+                    ));
                 }
             }
         }
@@ -86,7 +97,7 @@ impl Machine {
         panic!("Nooooooooope")
     }
 
-    fn neighbors_joltage(&self, state: [u16; 12]) -> Vec<[u16; 12]> {
+    fn neighbors_joltage(&self, state: [u8; 12]) -> Vec<[u8; 12]> {
         self.buttons_alt
             .iter()
             .map(|buttons| {
@@ -99,7 +110,7 @@ impl Machine {
             .collect()
     }
 
-    fn is_too_high(&self, state: [u16; 12]) -> bool {
+    fn is_too_high(&self, state: [u8; 12]) -> bool {
         state
             .iter()
             .zip(self.joltage_req.iter())
@@ -172,6 +183,7 @@ impl FromStr for Machine {
 type BitVec = tinybitset::TinyBitSet<u8, 2>;
 
 use std::{
+    cmp::Reverse,
     collections::{BinaryHeap, HashMap, VecDeque},
     ops::BitXor,
     str::FromStr,
