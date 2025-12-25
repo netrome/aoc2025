@@ -77,6 +77,6 @@ use std::collections::HashSet;
 
 use itertools::Itertools;
 
-use crate::{solution::Solution, utils};
+use crate::solution::Solution;
 inventory::submit!(Solution::new(9, 1, p1));
 inventory::submit!(Solution::new(9, 2, p2));
