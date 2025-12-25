@@ -136,7 +136,7 @@ impl FromStr for Machine {
             })
             .collect();
 
-        let buttons_alt = chunks[1..chunks.len() - 1]
+        let mut buttons_alt: Vec<Vec<usize>> = chunks[1..chunks.len() - 1]
             .into_iter()
             .map(|chunk| {
                 chunk
@@ -147,6 +147,8 @@ impl FromStr for Machine {
                     .collect()
             })
             .collect();
+
+        buttons_alt.sort_by_key(|buttons| usize::MAX - buttons.len());
 
         let joltage_req = chunks[chunks.len() - 1]
             .trim()
@@ -172,7 +174,6 @@ impl FromStr for Machine {
 type BitVec = tinybitset::TinyBitSet<u8, 2>;
 
 use std::{
-    cmp::Reverse,
     collections::{BinaryHeap, HashMap, VecDeque},
     ops::BitXor,
     str::FromStr,
