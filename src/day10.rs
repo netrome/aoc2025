@@ -8,18 +8,31 @@ pub fn p1(input: &str) -> String {
 }
 
 pub fn p2(input: &str) -> String {
-    todo!();
+    input
+        .trim()
+        .lines()
+        .map(find_fewest_presses_for_joltage)
+        .sum::<usize>()
+        .to_string()
 }
 
 #[derive(Debug)]
 struct Machine {
     diagram: BitVec,
     buttons: Vec<BitVec>,
+    buttons_alt: Vec<Vec<usize>>,
+    joltage_req: [u8; 12],
 }
 
 fn find_fewest_presses(line: &str) -> usize {
     let machine: Machine = line.parse().unwrap();
     machine.fewest_presses()
+}
+
+fn find_fewest_presses_for_joltage(line: &str) -> usize {
+    println!("Processing line: {line}");
+    let machine: Machine = line.parse().unwrap();
+    dbg!(machine.fewest_presses_to_match_joltage_req())
 }
 
 impl Machine {
@@ -49,6 +62,48 @@ impl Machine {
             .iter()
             .map(|button_bits| button_bits.bitxor(state))
             .collect()
+    }
+
+    fn fewest_presses_to_match_joltage_req(&self) -> usize {
+        let mut distances: HashMap<[u8; 12], usize> = HashMap::new();
+
+        let mut queue = VecDeque::new();
+        queue.push_back(([0; 12], 0));
+
+        while let Some((state, distance)) = queue.pop_front() {
+            if state == self.joltage_req {
+                return distance;
+            }
+            distances.insert(state, distance);
+
+            for neighbor in self.neighbors_joltage(state) {
+                if !distances.contains_key(&neighbor) && !self.is_too_high(neighbor) {
+                    queue.push_back((neighbor, distance + 1));
+                }
+            }
+        }
+
+        panic!("Nooooooooope")
+    }
+
+    fn neighbors_joltage(&self, state: [u8; 12]) -> Vec<[u8; 12]> {
+        self.buttons_alt
+            .iter()
+            .map(|buttons| {
+                let mut state = state.clone();
+                for idx in buttons {
+                    state[*idx] += 1
+                }
+                state
+            })
+            .collect()
+    }
+
+    fn is_too_high(&self, state: [u8; 12]) -> bool {
+        state
+            .iter()
+            .zip(self.joltage_req.iter())
+            .any(|(state, req)| state > req)
     }
 }
 
@@ -81,7 +136,36 @@ impl FromStr for Machine {
             })
             .collect();
 
-        Ok(Self { diagram, buttons })
+        let buttons_alt = chunks[1..chunks.len() - 1]
+            .into_iter()
+            .map(|chunk| {
+                chunk
+                    .trim_start_matches('(')
+                    .trim_end_matches(')')
+                    .split(',')
+                    .map(|s| s.parse::<usize>().unwrap())
+                    .collect()
+            })
+            .collect();
+
+        let joltage_req = chunks[chunks.len() - 1]
+            .trim()
+            .trim_start_matches('{')
+            .trim_end_matches('}')
+            .split(",")
+            .map(|s| s.parse().unwrap())
+            .enumerate()
+            .fold([0; 12], |mut arr, (idx, val)| {
+                arr[idx] = val;
+                arr
+            });
+
+        Ok(Self {
+            diagram,
+            buttons,
+            buttons_alt,
+            joltage_req,
+        })
     }
 }
 
