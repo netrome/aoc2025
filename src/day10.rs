@@ -162,48 +162,6 @@ impl Machine {
         memo.insert(target_vec, result);
         result
     }
-
-    fn fewest_presses_to_match_joltage_req(&self) -> usize {
-        let mut distances: HashMap<[u8; 12], usize> = HashMap::new();
-
-        let mut stack = Vec::new();
-        stack.push(([0; 12], 0));
-
-        while let Some((state, distance)) = stack.pop() {
-            if state == self.joltage_req {
-                return distance;
-            }
-            distances.insert(state, distance);
-
-            for neighbor in self.neighbors_joltage(state) {
-                if !distances.contains_key(&neighbor) && !self.is_too_high(neighbor) {
-                    stack.push((neighbor, distance + 1));
-                }
-            }
-        }
-
-        panic!("Nooooooooope")
-    }
-
-    fn neighbors_joltage(&self, state: [u8; 12]) -> Vec<[u8; 12]> {
-        self.buttons_alt
-            .iter()
-            .map(|buttons| {
-                let mut state = state.clone();
-                for idx in buttons {
-                    state[*idx] += 1
-                }
-                state
-            })
-            .collect()
-    }
-
-    fn is_too_high(&self, state: [u8; 12]) -> bool {
-        state
-            .iter()
-            .zip(self.joltage_req.iter())
-            .any(|(state, req)| state > req)
-    }
 }
 
 impl FromStr for Machine {
@@ -273,7 +231,7 @@ impl FromStr for Machine {
 type BitVec = tinybitset::TinyBitSet<u8, 2>;
 
 use std::{
-    collections::{BinaryHeap, HashMap, VecDeque},
+    collections::{HashMap, VecDeque},
     ops::BitXor,
     str::FromStr,
 };
