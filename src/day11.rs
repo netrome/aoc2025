@@ -47,7 +47,7 @@ pub fn p2_old(input: &str) -> String {
 pub struct Graph(HashMap<NodeId, Vec<NodeId>>);
 
 impl Graph {
-    fn num_paths(&self, from: NodeId, to: NodeId) -> u32 {
+    fn num_paths(&self, from: NodeId, to: NodeId) -> u64 {
         let mut num_paths = HashMap::new();
         let mut to_visit = VecDeque::new();
 
