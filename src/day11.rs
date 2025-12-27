@@ -8,15 +8,18 @@ pub fn p1(input: &str) -> String {
 }
 
 pub fn p2(input: &str) -> String {
-    let graph: Graph = input.parse().unwrap();
+    let mut graph: Graph = input.parse().unwrap();
 
     let paths_from_dac_to_out = graph.all_paths("dac".parse().unwrap(), "out".parse().unwrap());
+    graph.prune(&paths_from_dac_to_out);
     let num_paths_from_dac_to_out = paths_from_dac_to_out.len();
 
     let paths_from_fft_to_dac = graph.all_paths("fft".parse().unwrap(), "dac".parse().unwrap());
+    graph.prune(&paths_from_fft_to_dac);
     let num_paths_from_fft_to_dac = paths_from_fft_to_dac.len();
 
     let paths_from_svr_to_fft = graph.all_paths("svr".parse().unwrap(), "fft".parse().unwrap());
+    graph.prune(&paths_from_svr_to_fft);
     let num_paths_from_svr_to_fft = paths_from_svr_to_fft.len();
 
     (num_paths_from_svr_to_fft * num_paths_from_fft_to_dac * num_paths_from_dac_to_out).to_string()
@@ -58,6 +61,14 @@ impl Graph {
         }
 
         paths
+    }
+
+    fn prune(&mut self, paths: &[Vec<NodeId>]) {
+        for path in paths {
+            for node_id in &path[1..] {
+                self.0.remove(node_id);
+            }
+        }
     }
 }
 
