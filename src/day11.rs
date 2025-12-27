@@ -2,8 +2,7 @@ pub fn p1(input: &str) -> String {
     let graph: Graph = input.parse().unwrap();
 
     graph
-        .all_paths("you".parse().unwrap(), "out".parse().unwrap())
-        .len()
+        .num_paths("you".parse().unwrap(), "out".parse().unwrap())
         .to_string()
 }
 
@@ -34,6 +33,41 @@ pub fn p2(input: &str) -> String {
 pub struct Graph(HashMap<NodeId, Vec<NodeId>>);
 
 impl Graph {
+    fn num_paths(&self, from: NodeId, to: NodeId) -> u32 {
+        let mut num_paths = HashMap::new();
+        let mut to_visit = VecDeque::new();
+
+        num_paths.insert(from, 1);
+        to_visit.push_back(from);
+
+        while let Some(node) = to_visit.pop_front() {
+            if node == to {
+                continue;
+            }
+
+            let n = num_paths.remove(&node).unwrap();
+
+            for neighbor in self.0.get(&node).unwrap() {
+                if !num_paths.contains_key(&neighbor) {
+                    to_visit.push_back(*neighbor);
+                }
+                *num_paths.entry(*neighbor).or_default() += n;
+            }
+        }
+
+        *num_paths.get(&to).unwrap()
+    }
+
+    fn prune(&mut self, from: NodeId) {
+        let mut to_visit = vec![from];
+
+        while let Some(node) = to_visit.pop() {
+            let Some(neighbors) = self.0.get(&node) else {
+                continue;
+            };
+        }
+    }
+
     fn all_paths(&self, from: NodeId, to: NodeId) -> Vec<Vec<NodeId>> {
         let mut found_paths = Vec::new();
         let mut in_progress = vec![vec![from]];
@@ -113,7 +147,10 @@ impl FromStr for NodeId {
     }
 }
 
-use std::{collections::HashMap, str::FromStr};
+use std::{
+    collections::{HashMap, VecDeque},
+    str::FromStr,
+};
 
 use crate::solution::Solution;
 inventory::submit!(Solution::new(11, 1, p1));
