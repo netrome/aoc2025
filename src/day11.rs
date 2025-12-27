@@ -9,6 +9,20 @@ pub fn p1(input: &str) -> String {
 pub fn p2(input: &str) -> String {
     let mut graph: Graph = input.parse().unwrap();
 
+    let paths_from_dac_to_out = graph.num_paths("dac".parse().unwrap(), "out".parse().unwrap());
+    graph.prune_v2("dac".parse().unwrap());
+
+    let paths_from_fft_to_dac = graph.num_paths("fft".parse().unwrap(), "dac".parse().unwrap());
+    graph.prune_v2("fft".parse().unwrap());
+
+    let paths_from_svr_to_fft = graph.num_paths("svr".parse().unwrap(), "fft".parse().unwrap());
+
+    (paths_from_svr_to_fft * paths_from_fft_to_dac * paths_from_dac_to_out).to_string()
+}
+
+pub fn p2_old(input: &str) -> String {
+    let mut graph: Graph = input.parse().unwrap();
+
     let paths_from_dac_to_out = graph.all_paths("dac".parse().unwrap(), "out".parse().unwrap());
     println!("Dac to out");
     graph.prune(&paths_from_dac_to_out);
@@ -58,13 +72,25 @@ impl Graph {
         *num_paths.get(&to).unwrap()
     }
 
-    fn prune(&mut self, from: NodeId) {
+    fn prune_v2(&mut self, from: NodeId) {
         let mut to_visit = vec![from];
 
         while let Some(node) = to_visit.pop() {
-            let Some(neighbors) = self.0.get(&node) else {
+            let Some(neighbors) = self.0.remove(&node) else {
                 continue;
             };
+
+            for neighbor in neighbors {
+                to_visit.push(neighbor);
+                for list in self.0.values_mut() {
+                    let Some((idx, _)) = list.iter().enumerate().find(|(_, n)| **n == neighbor)
+                    else {
+                        continue;
+                    };
+
+                    list.remove(idx);
+                }
+            }
         }
     }
 
@@ -149,6 +175,7 @@ impl FromStr for NodeId {
 
 use std::{
     collections::{HashMap, VecDeque},
+    ops::Index,
     str::FromStr,
 };
 
