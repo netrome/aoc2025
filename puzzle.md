@@ -1,67 +1,50 @@
-\--- Day 10: Factory ---
+\--- Day 11: Reactor ---
 ----------
 
-Just across the hall, you find a large factory. Fortunately, the Elves here have plenty of time to decorate. Unfortunately, it's because the factory machines are all offline, and none of the Elves can figure out the initialization procedure.
+You hear some loud beeping coming from a hatch in the floor of the factory, so you decide to check it out. Inside, you find several large electrical conduits and a ladder.
 
-The Elves do have the manual for the machines, but the section detailing the initialization procedure was eaten by a [Shiba Inu](https://en.wikipedia.org/wiki/Shiba_Inu). All that remains of the manual are some indicator light diagrams, button wiring schematics, and [joltage](3) requirements for each machine.
+Climbing down the ladder, you discover the source of the beeping: a large, toroidal reactor which powers the factory above. Some Elves here are hurriedly running between the reactor and a nearby server rack, apparently trying to fix something.
+
+One of the Elves notices you and rushes over. "It's a good thing you're here! We just installed a new *server rack*, but we aren't having any luck getting the reactor to communicate with it!" You glance around the room and see a tangle of cables and devices running from the server rack to the reactor. She rushes off, returning a moment later with a list of the devices and their outputs (your puzzle input).
 
 For example:
 
 ```
-[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
-[...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}
-[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}
+aaa: you hhh
+you: bbb ccc
+bbb: ddd eee
+ccc: ddd eee fff
+ddd: ggg
+eee: out
+fff: out
+ggg: out
+hhh: ccc fff iii
+iii: out
 
 ```
 
-The manual describes one machine per line. Each line contains a single indicator light diagram in `[`square brackets`]`, one or more button wiring schematics in `(`parentheses`)`, and joltage requirements in `{`curly braces`}`.
+Each line gives the name of a device followed by a list of the devices to which its outputs are attached. So, `bbb: ddd eee` means that device `bbb` has two outputs, one leading to device `ddd` and the other leading to device `eee`.
 
-To start a machine, its *indicator lights* must match those shown in the diagram, where `.` means *off* and `#` means *on*. The machine has the number of indicator lights shown, but its indicator lights are all *initially off*.
+The Elves are pretty sure that the issue isn't due to any specific device, but rather that the issue is triggered by data following some specific *path* through the devices. Data only ever flows from a device through its outputs; it can't flow backwards.
 
-So, an indicator light diagram like `[.##.]` means that the machine has four indicator lights which are initially off and that the goal is to simultaneously configure the first light to be off, the second light to be on, the third to be on, and the fourth to be off.
+After dividing up the work, the Elves would like you to focus on the devices starting with the one next to you (an Elf hastily attaches a label which just says *`you`*) and ending with the main output to the reactor (which is the device with the label *`out`*).
 
-You can *toggle* the state of indicator lights by pushing any of the listed *buttons*. Each button lists which indicator lights it toggles, where `0` means the first light, `1` means the second light, and so on. When you push a button, each listed indicator light either turns on (if it was off) or turns off (if it was on). You have to push each button an integer number of times; there's no such thing as "0.5 presses" (nor can you push a button a negative number of times).
+To help the Elves figure out which path is causing the issue, they need you to find *every* path from `you` to `out`.
 
-So, a button wiring schematic like `(0,3,4)` means that each time you push that button, the first, fourth, and fifth indicator lights would all toggle between on and off. If the indicator lights were `[#.....]`, pushing the button would change them to be `[...##.]` instead.
+In this example, these are all of the paths from `you` to `out`:
 
-Because none of the machines are running, the joltage requirements are irrelevant and can be safely ignored.
+* Data could take the connection from `you` to `bbb`, then from `bbb` to `ddd`, then from `ddd` to `ggg`, then from `ggg` to `out`.
+* Data could take the connection to `bbb`, then to `eee`, then to `out`.
+* Data could go to `ccc`, then `ddd`, then `ggg`, then `out`.
+* Data could go to `ccc`, then `eee`, then `out`.
+* Data could go to `ccc`, then `fff`, then `out`.
 
-You can push each button as many times as you like. However, to save on time, you will need to determine the *fewest total presses* required to correctly configure all indicator lights for all machines in your list.
+In total, there are `*5*` different paths leading from `you` to `out`.
 
-There are a few ways to correctly configure the first machine:
+*How many different paths lead from `you` to `out`?*
 
-```
-[.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
-```
-
-* You could press the first three buttons once each, a total of `3` button presses.
-* You could press `(1,3)` once, `(2,3)` once, and `(0,1)` twice, a total of `4` button presses.
-* You could press all of the buttons except `(1,3)` once each, a total of `5` button presses.
-
-However, the fewest button presses required is `*2*`. One way to do this is by pressing the last two buttons (`(0,2)` and `(0,1)`) once each.
-
-The second machine can be configured with as few as `*3*` button presses:
-
-```
-[...#.] (0,2,3,4) (2,3) (0,4) (0,1,2) (1,2,3,4) {7,5,12,7,2}
-```
-
-One way to achieve this is by pressing the last three buttons (`(0,4)`, `(0,1,2)`, and `(1,2,3,4)`) once each.
-
-The third machine has a total of six indicator lights that need to be configured correctly:
-
-```
-[.###.#] (0,1,2,3,4) (0,3,4) (0,1,2,4,5) (1,2) {10,11,11,5,10,5}
-```
-
-The fewest presses required to correctly configure it is `*2*`; one way to do this is by pressing buttons `(0,3,4)` and `(0,1,2,4,5)` once each.
-
-So, the fewest button presses required to correctly configure the indicator lights on all of the machines is `2` + `3` + `2` = `*7*`.
-
-Analyze each machine's indicator light diagram and button wiring schematics. *What is the fewest button presses required to correctly configure the indicator lights on all of the machines?*
-
-To begin, [get your puzzle input](10/input).
+To begin, [get your puzzle input](11/input).
 
 Answer:
 
-You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Factory%22+%2D+Day+10+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F10) [Twitter](https://twitter.com/intent/tweet?text=%22Factory%22+%2D+Day+10+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F10&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
+You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=%22Reactor%22+%2D+Day+11+%2D+Advent+of+Code+2025+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F11) [Twitter](https://twitter.com/intent/tweet?text=%22Reactor%22+%2D+Day+11+%2D+Advent+of+Code+2025&url=https%3A%2F%2Fadventofcode%2Ecom%2F2025%2Fday%2F11&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
