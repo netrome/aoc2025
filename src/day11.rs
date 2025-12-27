@@ -10,10 +10,16 @@ pub fn p1(input: &str) -> String {
 pub fn p2(input: &str) -> String {
     let graph: Graph = input.parse().unwrap();
 
-    graph
-        .all_paths("svr".parse().unwrap(), "out".parse().unwrap())
-        .len()
-        .to_string()
+    let paths_from_dac_to_out = graph.all_paths("dac".parse().unwrap(), "out".parse().unwrap());
+    let num_paths_from_dac_to_out = paths_from_dac_to_out.len();
+
+    let paths_from_fft_to_dac = graph.all_paths("fft".parse().unwrap(), "dac".parse().unwrap());
+    let num_paths_from_fft_to_dac = paths_from_fft_to_dac.len();
+
+    let paths_from_svr_to_fft = graph.all_paths("svr".parse().unwrap(), "fft".parse().unwrap());
+    let num_paths_from_svr_to_fft = paths_from_svr_to_fft.len();
+
+    (num_paths_from_svr_to_fft * num_paths_from_fft_to_dac * num_paths_from_dac_to_out).to_string()
 }
 
 pub struct Graph(HashMap<NodeId, Vec<NodeId>>);
