@@ -11,15 +11,21 @@ pub fn p2(input: &str) -> String {
     let mut graph: Graph = input.parse().unwrap();
 
     let paths_from_dac_to_out = graph.all_paths("dac".parse().unwrap(), "out".parse().unwrap());
+    println!("Dac to out");
     graph.prune(&paths_from_dac_to_out);
+    println!("Pruned");
     let num_paths_from_dac_to_out = paths_from_dac_to_out.len();
 
     let paths_from_fft_to_dac = graph.all_paths("fft".parse().unwrap(), "dac".parse().unwrap());
+    println!("FFT to to dac");
     graph.prune(&paths_from_fft_to_dac);
+    println!("Pruned");
     let num_paths_from_fft_to_dac = paths_from_fft_to_dac.len();
 
     let paths_from_svr_to_fft = graph.all_paths("svr".parse().unwrap(), "fft".parse().unwrap());
+    println!("SVR to to fft");
     graph.prune(&paths_from_svr_to_fft);
+    println!("Pruned");
     let num_paths_from_svr_to_fft = paths_from_svr_to_fft.len();
 
     (num_paths_from_svr_to_fft * num_paths_from_fft_to_dac * num_paths_from_dac_to_out).to_string()
