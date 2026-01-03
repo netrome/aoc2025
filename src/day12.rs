@@ -25,7 +25,11 @@ pub fn p1(input: &str) -> String {
     println!("Num candidates: {}", candidates.len());
     println!("Trivial cases: {}", trivial_cases.len());
 
-    "".to_string()
+    // Lol, I spent so much time thinking about this problem
+    // only to find that all the candidates could be trivially packed.
+    // Oh well, this was quite fun :)
+
+    trivial_cases.len().to_string()
 }
 
 fn shape_area_is_within_region_size(shapes: &[Shape; 6], region: &Region) -> bool {
@@ -51,7 +55,8 @@ fn is_trivially_packable(region: &Region) -> bool {
         <= (region.width - region.width % 3) as usize * (region.height - region.height % 3) as usize
 }
 
-pub fn p2(input: &str) -> String {
+pub fn p2(_input: &str) -> String {
+    // Not applicable
     todo!()
 }
 
