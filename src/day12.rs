@@ -8,11 +8,47 @@ pub fn p1(input: &str) -> String {
         .unwrap();
 
     let regions: Vec<Region> = regions.trim().lines().map(|s| s.parse().unwrap()).collect();
+    let candidates: Vec<Region> = regions
+        .iter()
+        .filter(|region| shape_area_is_within_region_size(&shapes, region))
+        .cloned()
+        .collect();
+
+    let trivial_cases: Vec<Region> = regions
+        .iter()
+        .cloned()
+        .filter(is_trivially_packable)
+        .collect();
 
     println!("Shapes: {shapes:?}");
     println!("Regions: {regions:?}");
+    println!("Num candidates: {}", candidates.len());
+    println!("Trivial cases: {}", trivial_cases.len());
 
     "".to_string()
+}
+
+fn shape_area_is_within_region_size(shapes: &[Shape; 6], region: &Region) -> bool {
+    let shape_area: usize = region
+        .quantities
+        .iter()
+        .zip(shapes.iter())
+        .map(|(quantity, shape)| *quantity as usize * shape.indices.len())
+        .sum();
+
+    shape_area <= region.width as usize * region.height as usize
+}
+
+fn is_trivially_packable(region: &Region) -> bool {
+    let trivial_pack_area = region
+        .quantities
+        .iter()
+        .map(|quantity| *quantity as usize)
+        .sum::<usize>()
+        * 9;
+
+    trivial_pack_area
+        <= (region.width - region.width % 3) as usize * (region.height - region.height % 3) as usize
 }
 
 pub fn p2(input: &str) -> String {
@@ -24,7 +60,7 @@ struct Shape {
     indices: Vec<Pos>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Region {
     width: u8,
     height: u8,

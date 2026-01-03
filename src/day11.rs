@@ -175,7 +175,6 @@ impl FromStr for NodeId {
 
 use std::{
     collections::{HashMap, VecDeque},
-    ops::Index,
     str::FromStr,
 };
 
